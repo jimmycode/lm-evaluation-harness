@@ -1,11 +1,12 @@
 from . import hf
+from . import litegpt3
 from . import gpt3
 from . import textsynth
 from . import dummy
 
 MODEL_REGISTRY = {
-    "hf": gpt2.HFLM,
-    "gpt2": gpt2.GPT2LM,
+    "hf": hf.HFLM,
+    "litegpt3": litegpt3.liteGPT3LM,
     "gpt3": gpt3.GPT3LM,
     "textsynth": textsynth.TextSynthLM,
     "dummy": dummy.DummyLM,
