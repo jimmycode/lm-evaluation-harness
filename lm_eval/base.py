@@ -1,7 +1,6 @@
 import abc
 from typing import Iterable
 import numpy as np
-import random
 import re
 import os
 import json
@@ -12,7 +11,7 @@ from tqdm import tqdm
 import torch
 import torch.nn.functional as F
 
-from lm_eval.metrics import mean, weighted_perplexity, weighted_mean, bits_per_byte
+from lm_eval.metrics import mean, weighted_perplexity, bits_per_byte
 from lm_eval import utils
 from abc import abstractmethod
 
@@ -236,7 +235,7 @@ class BaseLM(LM):
         # TODO: automatic (variable) batch size detection for vectorization
         re_ord = utils.Reorderer(requests, _collate)
         for chunk in utils.chunks(
-            tqdm(re_ord.get_reordered(), disable=disable_tqdm), self.batch_size
+                tqdm(re_ord.get_reordered(), disable=disable_tqdm), self.batch_size
         ):
             inps = []
             cont_toks_list = []
@@ -263,7 +262,7 @@ class BaseLM(LM):
 
                 # when too long to fit in context, truncate from the left
                 inp = torch.tensor(
-                    (context_enc + continuation_enc)[-(self.max_length + 1) :][:-1],
+                    (context_enc + continuation_enc)[-(self.max_length + 1):][:-1],
                     dtype=torch.long,
                 ).to(self.device)
                 (inplen,) = inp.shape
@@ -296,12 +295,12 @@ class BaseLM(LM):
             ).cpu()  # [batch, padding_length, vocab]
 
             for (cache_key, _, _), logits, inp, inplen, cont_toks in zip(
-                chunk, multi_logits, inps, inplens, cont_toks_list
+                    chunk, multi_logits, inps, inplens, cont_toks_list
             ):
 
                 # Slice to original seq length
                 contlen = len(cont_toks)
-                logits = logits[inplen - contlen : inplen].unsqueeze(
+                logits = logits[inplen - contlen: inplen].unsqueeze(
                     0
                 )  # [1, seq, vocab]
 
@@ -349,14 +348,14 @@ class BaseLM(LM):
             (primary_until,) = self.tok_encode(until[0])
 
             context_enc = torch.tensor(
-                [self.tok_encode(context)[self.max_gen_toks - self.max_length :]]
+                [self.tok_encode(context)[self.max_gen_toks - self.max_length:]]
             ).to(self.device)
 
             cont = self._model_generate(
                 context_enc, context_enc.shape[1] + self.max_gen_toks, primary_until
             )
 
-            s = self.tok_decode(cont[0].tolist()[context_enc.shape[1] :])
+            s = self.tok_decode(cont[0].tolist()[context_enc.shape[1]:])
 
             for term in until:
                 s = s.split(term)[0]
@@ -574,7 +573,7 @@ class Task(abc.ABC):
 
     @utils.positional_deprecated
     def fewshot_context(
-        self, doc, num_fewshot, provide_description=None, rnd=None, description=None
+            self, doc, num_fewshot, provide_description=None, rnd=None, description=None
     ):
         """Returns a fewshot context string that is made up of a prepended description
         (if provided), the `num_fewshot` number of examples, and an appended prompt example.
@@ -594,7 +593,7 @@ class Task(abc.ABC):
             The fewshot context.
         """
         assert (
-            rnd is not None
+                rnd is not None
         ), "A `random.Random` generator argument must be provided to `rnd`"
         assert not provide_description, (
             "The `provide_description` arg will be removed in future versions. To prepend "
@@ -629,13 +628,13 @@ class Task(abc.ABC):
                 fewshotex = [x for x in fewshotex if x != doc][:num_fewshot]
 
             labeled_examples = (
-                "\n\n".join(
-                    [
-                        self.doc_to_text(doc) + self.doc_to_target(doc)
-                        for doc in fewshotex
-                    ]
-                )
-                + "\n\n"
+                    "\n\n".join(
+                        [
+                            self.doc_to_text(doc) + self.doc_to_target(doc)
+                            for doc in fewshotex
+                        ]
+                    )
+                    + "\n\n"
             )
 
         example = self.doc_to_text(doc)
@@ -691,13 +690,13 @@ class PerplexityTask(Task, abc.ABC):
         return []
 
     def fewshot_context(
-        self, doc, num_fewshot, provide_description=None, rnd=None, description=None
+            self, doc, num_fewshot, provide_description=None, rnd=None, description=None
     ):
         assert (
-            num_fewshot == 0
+                num_fewshot == 0
         ), "The number of fewshot examples must be 0 for perplexity tasks."
         assert (
-            rnd is not None
+                rnd is not None
         ), "A `random.Random` generator argument must be provided to `rnd`."
         assert not provide_description, (
             "The `provide_description` arg will be removed in future versions. To prepend "
@@ -871,9 +870,9 @@ class Request:
 
     def __eq__(self, other):
         return (
-            self.request_type == other.request_type
-            and self.args == other.args
-            and self.index == other.index
+                self.request_type == other.request_type
+                and self.args == other.args
+                and self.index == other.index
         )
 
     def __repr__(self):
