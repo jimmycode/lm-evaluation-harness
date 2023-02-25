@@ -8,6 +8,7 @@ class HFLM(BaseLM):
             self,
             device="cuda",
             pretrained="gpt2",
+            dtype="bf16",
             revision="main",
             subfolder=None,
             tokenizer=None,
@@ -39,7 +40,18 @@ class HFLM(BaseLM):
         self.hf_lm = transformers.AutoModelForCausalLM.from_pretrained(
             pretrained,
             revision=revision,
-        ).to(self.device)
+        )
+
+        if dtype == "bf16":
+            self.hf_lm.bfloat16()
+        elif dtype == "fp16":
+            self.hf_lm.half()
+        elif dtype == "fp32":
+            self.hf_lm.float()
+        else:
+            raise ValueError(f"Invalid dtype: {dtype}")
+
+        self.hf_lm.to(self.device)
         self.hf_lm.eval()
 
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(

@@ -48,6 +48,7 @@ class liteGPT3LM(BaseLM):
 
         assert model_type in LITEGPT3_MODELS.keys(), f"model_type must be one of {LITEGPT3_MODELS.keys()}"
         self.litegpt3_lm = LITEGPT3_MODELS[model_type].from_pretrained(checkpoint_dir)
+
         if dtype == "bf16":
             self.litegpt3_lm.bfloat16()
         elif dtype == "fp16":
