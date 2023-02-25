@@ -11,20 +11,19 @@ from lm_eval.utils import positional_deprecated, run_task_tests
 
 @positional_deprecated
 def simple_evaluate(
-    model,
-    model_args=None,
-    tasks=[],
-    num_fewshot=0,
-    batch_size=None,
-    device=None,
-    no_cache=False,
-    limit=None,
-    bootstrap_iters=100000,
-    description_dict=None,
-    check_integrity=False,
-    decontamination_ngrams_path=None,
+        model,
+        model_args=None,
+        tasks=[],
+        num_fewshot=0,
+        batch_size=None,
+        device=None,
+        no_cache=False,
+        limit=None,
+        bootstrap_iters=100000,
+        description_dict=None,
+        check_integrity=False,
+        decontamination_ngrams_path=None,
 ):
-
     """Instantiate and evaluate a model on a list of tasks.
 
     :param model: Union[str, LM]
@@ -114,14 +113,14 @@ decontaminate_suffix = "_decontaminate"
 
 @positional_deprecated
 def evaluate(
-    lm,
-    task_dict,
-    provide_description=None,
-    num_fewshot=0,
-    limit=None,
-    bootstrap_iters=100000,
-    description_dict=None,
-    decontamination_ngrams_path=None,
+        lm,
+        task_dict,
+        provide_description=None,
+        num_fewshot=0,
+        limit=None,
+        bootstrap_iters=100000,
+        description_dict=None,
+        decontamination_ngrams_path=None,
 ):
     """Instantiate and evaluate a model on a list of tasks.
 
