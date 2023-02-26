@@ -1,20 +1,22 @@
-import transformers
 import torch
 from lm_eval.base import BaseLM
-from litegpt3.models.gpt_neox_ps_lora.modeling_gpt_neox import GPTNeoXPSLoRAForCausalLM
-from litegpt3.models.gpt_neox_ps_lora.tokenization_gpt_neox_fast import GPTNeoXTokenizerFast
-from litegpt3.models.gpt2_ps.modeling_gpt2_ps import GPT2PSLMHeadModel
-from litegpt3.models.gpt2_ps.tokenization_gpt2_ps_fast import GPT2PSTokenizerFast
+from litegpt3.auto import LiteGPT3AutoModelForCausalLM, LiteGPT3AutoTokenizer
 
-LITEGPT3_MODELS = {
-    "gpt_neox_ps_lora": GPTNeoXPSLoRAForCausalLM,
-    "gpt2_ps": GPT2PSLMHeadModel,
-}
 
-LITEGPT3_TOKENIZERS = {
-    "gpt_neox_ps_lora": GPTNeoXTokenizerFast,
-    "gpt2_ps": GPT2PSTokenizerFast,
-}
+# from litegpt3.models.gpt_neox_ps_lora.modeling_gpt_neox_ps_lora import GPTNeoXPSLoRAForCausalLM
+# from litegpt3.models.gpt_neox_ps_lora.tokenization_gpt_neox_ps_lora_fast import GPTNeoXTokenizerFast
+# from litegpt3.models.gpt2_ps.modeling_gpt2_ps import GPT2PSLMHeadModel
+# from litegpt3.models.gpt2_ps.tokenization_gpt2_ps_fast import GPT2PSTokenizerFast
+
+# LITEGPT3_MODELS = {
+#     "gpt_neox_ps_lora": GPTNeoXPSLoRAForCausalLM,
+#     "gpt2_ps": GPT2PSLMHeadModel,
+# }
+#
+# LITEGPT3_TOKENIZERS = {
+#     "gpt_neox_ps_lora": GPTNeoXTokenizerFast,
+#     "gpt2_ps": GPT2PSTokenizerFast,
+# }
 
 
 class liteGPT3LM(BaseLM):
@@ -46,8 +48,8 @@ class liteGPT3LM(BaseLM):
                 else torch.device("cpu")
             )
 
-        assert model_type in LITEGPT3_MODELS.keys(), f"model_type must be one of {LITEGPT3_MODELS.keys()}"
-        self.litegpt3_lm = LITEGPT3_MODELS[model_type].from_pretrained(checkpoint_dir)
+        # assert model_type in LITEGPT3_MODELS.keys(), f"model_type must be one of {LITEGPT3_MODELS.keys()}"
+        self.litegpt3_lm = LiteGPT3AutoModelForCausalLM.from_pretrained(checkpoint_dir)
 
         if dtype == "bf16":
             self.litegpt3_lm.bfloat16()
@@ -61,7 +63,7 @@ class liteGPT3LM(BaseLM):
         self.litegpt3_lm.to(self.device)
         self.litegpt3_lm.eval()
 
-        self.tokenizer = LITEGPT3_TOKENIZERS[model_type].from_pretrained(tokenizer_path)
+        self.tokenizer = LiteGPT3AutoTokenizer.from_pretrained(tokenizer_path)
 
         # assert isinstance(
         #     self.tokenizer,
