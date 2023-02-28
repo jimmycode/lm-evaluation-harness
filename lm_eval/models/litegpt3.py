@@ -22,7 +22,6 @@ from litegpt3.auto import LiteGPT3AutoModelForCausalLM, LiteGPT3AutoTokenizer
 class liteGPT3LM(BaseLM):
     def __init__(
             self,
-            model_type="gpt_neox_ps_lora",
             checkpoint_dir=None,
             tokenizer_path=None,
             dtype="bf16",
